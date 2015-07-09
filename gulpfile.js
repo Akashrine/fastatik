@@ -12,13 +12,13 @@ var gulp            = require('gulp'),
       del = require('del'),
       handlebars  = require('gulp-compile-handlebars');
 
-
+var dist = './build';
 
 gulp.task('serve', function() {
-  browserSync({
-    server: {
-       baseDir: "./build"
-    }
+  browserSync.init({
+    server: dist,
+    open: false,
+    notify: false
   });
 });
 
@@ -40,7 +40,6 @@ gulp.task('styles', function(){
         this.emit('end');
     }}))
     .pipe(sass())
-    .pipe(autoprefixer('last 2 versions'))
     .pipe(gulp.dest('build/css/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(minifycss())
@@ -55,6 +54,11 @@ gulp.task('templates', function() {
   };
 
   gulp.src(['src/*.hbs'])
+    .pipe(plumber({
+      errorHandler: function (error) {
+        console.log(error.message);
+        this.emit('end');
+    }}))
     .pipe(handlebars(null, opts))
     .pipe(rename({
       extname: '.html'
@@ -65,8 +69,6 @@ gulp.task('templates', function() {
 
 gulp.task('watch', ['serve'], function(){
   gulp.watch("src/scss/**/*.scss", ['styles']);
-
-  gulp.watch("*.html", ['bs-reload']);
   gulp.watch('src/**/*.hbs', ['templates']);
 });
 
