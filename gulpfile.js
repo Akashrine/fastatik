@@ -71,19 +71,19 @@ gulp.task('pre-process', function(){
         autoprefixer({browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4']}),
         mqpacker
     ];
-    return gulp.src("src/css/main.scss")
+    return gulp.src("src/scss/style.scss")
         .pipe(sass())
         .on('error', swallowError)
         .pipe(postcss(processors))
         .pipe(size({gzip: false, showFiles: true}))
         .pipe(size({gzip: true, showFiles: true}))
-        .pipe(gulp.dest('src/css'))
+        .pipe(gulp.dest('src/scss'))
         .pipe(gulp.dest('build/css'))
         .pipe(minifyCSS())
-        .pipe(rename('main.min.css'))
+        .pipe(rename('style.min.css'))
         .pipe(size({gzip: false, showFiles: true}))
         .pipe(size({gzip: true, showFiles: true}))
-        .pipe(gulp.dest('src/css/'))
+        .pipe(gulp.dest('src/scss/'))
         .pipe(gulp.dest('build/css/'))
         .pipe(browserSync.stream({match: '**/*.css'}));
 });
